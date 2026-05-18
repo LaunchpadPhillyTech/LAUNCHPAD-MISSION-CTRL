@@ -2,19 +2,9 @@
 
 **Launchpad Mission Control** is a shared, multi-user web application designed for staff to manage partnerships, student outreach, interactions, and automated communications. It provides administrative controls and a shared database, ensuring all staff members can view and contribute to the organization's outreach efforts.
 
-**Status**: ✅ **READY FOR DEVELOPMENT**  
-**Last Updated**: May 4, 2026  
+**Status**: ✅ **ALMOST READY FOR DEVELOPMENT**  
+**Last Updated**: May 6, 2026  
 **Version**: 1.0
-
----
-
-## 🎯 Quick Start
-
-### Choose Your Path:
-1. **5-Min Quick Start** → See [GETTING_STARTED.md](./GETTING_STARTED.md)
-2. **Complete Setup** → See [DATABASE_INTEGRATION_GUIDE.md](./DATABASE_INTEGRATION_GUIDE.md)
-3. **Understand Changes** → See [IMPLEMENTATION_SUMMARY.md](./IMPLEMENTATION_SUMMARY.md)
-4. **Design Changes** → See [UI_SPACING_COMPARISON.md](./UI_SPACING_COMPARISON.md)
 
 ---
 
@@ -25,348 +15,130 @@ The application serves as a central hub for tracking and managing the relationsh
 - **Shared Workspace & Dashboard**: Real-time overview of recent interactions, quick actions, and administrative review queues.
 - **Partner Management**: Detailed tracking of organization contacts (Leadership, Primary, Secondary), school types, and partnership status.
 - **Interaction Logging**: Centralized log for infosessions, tabling, meetings, outreach, and interviews, including student participation counts and shared notes.
-- **Students Directory**: Comprehensive database of students, their associated partners, status (Active Member, Applicant, Alumni), and interaction history.
 - **AI-Powered Outreach**: Integration with OpenAI to generate tailored outreach emails based on partner interaction history and staff instructions.
 - **Audit Trail**: Full activity logging of all record creations, updates, and deletions for security and accountability.
-- **Global Search**: Searchable database for partners, interactions, and students.
-- **Professional UI**: Enhanced spacing and visual hierarchy matching design references.
-- **Database Integration**: Full PostgreSQL persistence with JWT authentication.
+- **Global Search**: Searchable database for partners, and interactions.
 
-## 🏗️ Technology Stack
+## Technology Stack
+- **Frontend**: React + Next.js with Tailwind CSS and [shadcn/ui](https://ui.shadcn.com/) components.
+- **Backend**: Node.js + Express with [Prisma ORM](https://www.prisma.io/).
+- **Database**: PostgreSQL (hosted on Neon).
+- **Authentication**: NextAuth.js with Google Workspace SSO and email/password support.
+- **AI**: OpenAI API for intelligent email composition.
 
-### Frontend
-- **Framework**: Next.js 16 with React 19
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Components**: shadcn/ui, Radix UI
-- **State**: React Context API
+## 🚀 Setup Instructions (Frontend & Backend)
 
-### Backend
-- **Runtime**: Node.js 18+
-- **Framework**: Express.js 4
-- **Language**: TypeScript
-- **ORM**: Prisma
-- **Authentication**: JWT + bcryptjs
-- **Database**: PostgreSQL 14
+### Prerequisites
+- Node.js (v18 or higher)
+- npm (v9 or higher)
+- PostgreSQL database (Neon or local)
 
-### Infrastructure
-- **Container**: Docker Compose
-- **Package Manager**: npm
-- **Environment**: .env based configuration
+### 1. Clone the Repository
+```bash
+git clone <your-repo-url>
+cd Launchpad\ Mission\ Control
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Environment Variables
+- Copy `.env.example` to `.env` and fill in all required values:
+  - `DATABASE_URL` (PostgreSQL connection string)
+  - `OPENAI_API_KEY` (OpenAI API key)
+  - Email and OAuth credentials as needed
+
+### 4. Database Setup
+- Run Prisma migrations:
+```bash
+npx prisma migrate deploy
+```
+
+### 5. Running the App
+- Start the development server:
+```bash
+npm run dev
+```
+
+- The app will be available at `http://localhost:3000` (frontend) and API routes at `/api/*`.
+
+### 6. Useful Scripts
+- `npm run dev` — Start Next.js frontend and backend
+- `npm run build` — Build frontend
+- `npm run start` — Start production server
 
 ---
 
-## 📁 Project Structure
+## 🛠️ Unified Installation & Setup
+
+This project uses a unified monorepo structure. All dependencies for both frontend (Next.js, React, Tailwind CSS) and backend (Express, Prisma, OpenAI, etc.) are managed in a single `package.json` at the repository root.
+
+### One-Step Install
+
+To install everything needed for development and production, simply run:
+
+```bash
+npm install
+```
+
+This will install all required dependencies for both the frontend and backend code.
+
+### Quickstart Summary
+1. Clone the repository
+2. Run `npm install` in the root directory
+3. Copy `.env.example` to `.env` and fill in your secrets
+4. Run database migrations with `npx prisma migrate deploy`
+5. Start the app with `npm run dev`
+
+No separate install steps are needed for frontend or backend—everything is managed together for simplicity.
+
+---
+
+## 📁 Folder Structure
 
 ```
 Launchpad Mission Control/
-├── CtrlRoom/
-│   ├── frontend/              # Next.js application
-│   ├── backend/               # Express API server
-│   └── docker-compose.yml     # PostgreSQL container
-├── Documentation/
-│   ├── DATABASE_INTEGRATION_GUIDE.md
-│   ├── IMPLEMENTATION_SUMMARY.md
-│   ├── UI_SPACING_COMPARISON.md
-│   ├── GETTING_STARTED.md
-│   └── README.md (this file)
-└── -#IMAGEREFERENCES/         # Design reference images
+├── activity-log/
+├── admin/
+├── api/
+├── app/
+├── auth/
+├── components/
+├── context/
+├── dashboard/
+├── email/
+├── hooks/
+├── interactions/
+├── lib/
+├── login/
+├── partners/
+├── prisma/
+├── public/
+├── reports/
+├── search/
+├── settings/
+├── src/
+├── .DOCUMENTATION GUIDES/
+├── globals.css
+├── package.json
+├── postcss.config.mjs
+├── tailwind.config.js
+├── tsconfig.json
+└── ... (other config and markdown files)
 ```
 
----
-
-## 🚀 Running the Application
-
-### Prerequisites
-- Node.js 18+
-- Docker & Docker Compose
-- npm
-
-### 1. Start Database
-```bash
-cd CtrlRoom
-docker-compose up -d postgres
-```
-
-### 2. Setup Backend
-```bash
-cd backend
-npm install
-cp .env.example .env.local
-npx prisma migrate dev --name init
-npm run dev
-```
-
-### 3. Run Frontend
-```bash
-cd ../frontend
-npm run dev
-```
-
-### 4. Access Application
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:5000/api
-- **Database GUI**: `cd backend && npm run prisma:studio`
-
-### 5. Test Login
-- Email: `test@launchpad.com`
-- Password: `password123`
+- All frontend, backend, and API code is organized under this single repository root for simplicity and easy integration.
+- Documentation and environment templates are in `.DOCUMENTATION GUIDES/`.
+- See individual folders for feature-specific code.
 
 ---
 
-## 📊 What's New (May 4, 2026)
-
-### UI/UX Improvements
-- ✅ Professional spacing applied to all components
-- ✅ Enhanced dashboard layout with better visual hierarchy
-- ✅ Improved login page with larger form inputs
-- ✅ Global styles updated for consistency
-- ✅ All spacing matches design reference images
-
-### Database Integration
-- ✅ PostgreSQL connection configured
-- ✅ Prisma ORM with complete schema
-- ✅ 15+ API endpoints implemented
-- ✅ JWT authentication ready
-- ✅ Password hashing with bcryptjs
-- ✅ Activity audit logging
-
-### Documentation
-- ✅ Complete integration guide (DATABASE_INTEGRATION_GUIDE.md)
-- ✅ Backend quick start (backend/BACKEND_SETUP.md)
-- ✅ Implementation summary (IMPLEMENTATION_SUMMARY.md)
-- ✅ UI comparison guide (UI_SPACING_COMPARISON.md)
-- ✅ Getting started checklist (GETTING_STARTED.md)
+For more details, see .DOCUMENTATION GUIDES:
+- `GETTING_STARTED.md` for a quickstart
+- `DATABASE_INTEGRATION_GUIDE.md` for database setup
+- `IMPLEMENTATION_SUMMARY.md` for architecture overview
 
 ---
-
-## 🔐 Security
-- JWT token-based authentication (7-day expiry)
-- Passwords hashed with bcryptjs
-- Protected API routes
-- CORS configured
-- Activity audit logging
-- Environment variable based configuration
-
----
-
-## 📚 Documentation
-
-| Document | Purpose | Time |
-|----------|---------|------|
-| **GETTING_STARTED.md** | Quick checklist & commands | 5 min |
-| **DATABASE_INTEGRATION_GUIDE.md** | Complete setup guide | 30 min |
-| **BACKEND_SETUP.md** | Backend quick start | 10 min |
-| **IMPLEMENTATION_SUMMARY.md** | What changed & why | 10 min |
-| **UI_SPACING_COMPARISON.md** | Visual before/after | 5 min |
-
----
-
-## 🎯 API Endpoints
-
-### Base: `http://localhost:5000/api`
-
-**Authentication**
-- `POST /auth/login` - Login with credentials
-- `POST /auth/register` - Create new account
-
-**Partners** (all require auth)
-- `GET /partners` - List partners
-- `GET /partners/:id` - Get single partner
-- `POST /partners` - Create partner
-- `PUT /partners/:id` - Update partner
-- `DELETE /partners/:id` - Delete partner
-
-**Students** (all require auth)
-- `GET /students` - List students
-- `POST /students` - Create student
-
-**Interactions** (all require auth)
-- `GET /interactions` - List interactions
-- `POST /interactions` - Create interaction
-
-**Dashboard** (protected)
-- `GET /staff/dashboard` - Get statistics
-- `GET /activity-logs` - View audit trail
-
----
-
-## 📱 Pages
-
-- `/` - Home/Login redirect
-- `/login` - Login page
-- `/dashboard` - Main dashboard
-- `/partners` - Partner management
-- `/partners/new` - Add new partner
-- `/partners/[id]/edit` - Edit partner
-- `/students` - Student directory
-- `/interactions` - Interaction log
-- `/email` - Email terminal
-- `/settings` - User settings
-- `/admin` - Admin panel
-
----
-
-## 🛠️ Development
-
-### Frontend Development
-```bash
-cd CtrlRoom/frontend
-npm run dev          # Start dev server
-npm run build        # Build for production
-npm run lint         # Check code quality
-```
-
-### Backend Development
-```bash
-cd CtrlRoom/backend
-npm run dev          # Start dev server with hot-reload
-npm run build        # Compile TypeScript
-npm start            # Run production build
-```
-
-### Database Management
-```bash
-cd CtrlRoom/backend
-npm run prisma:studio    # View/edit database
-npm run prisma:migrate   # Run migrations
-npm run prisma:push      # Push schema to DB
-npm run prisma:seed      # Seed test data
-```
-
----
-
-## 🐛 Troubleshooting
-
-### Port Already in Use
-```bash
-# Windows: Kill process on port
-netstat -ano | findstr :5000
-taskkill /PID <PID> /F
-
-# Mac/Linux
-lsof -i :5000
-kill -9 <PID>
-```
-
-### Database Connection Error
-```bash
-# Check if running
-docker-compose ps
-
-# Restart
-docker-compose restart postgres
-```
-
-### Frontend Can't Connect to Backend
-Verify `frontend/.env.local` has:
-```
-NEXT_PUBLIC_BACKEND_URL=http://localhost:5000/api
-```
-
----
-
-## 📋 Database Schema
-
-**Models**: User, Staff, Partner, PartnerContact, Student, Interaction, ActivityLog, SavedSearch
-
-**Features**:
-- Full CRUD operations
-- Relationship tracking
-- Audit logging
-- Status management
-- Follow-up tracking
-- Timestamps (createdAt, updatedAt)
-
-See DATABASE_INTEGRATION_GUIDE.md for complete schema.
-
----
-
-## 🚀 Deployment
-
-### Frontend (Vercel)
-```bash
-cd CtrlRoom/frontend
-npm run build
-vercel --prod
-```
-
-### Backend
-Deploy to Railway, Render, Heroku, or similar. Set environment variables and run migrations.
-
-### Database
-Use managed PostgreSQL (AWS RDS, Railway, etc.) in production.
-
----
-
-## 📞 Support
-
-1. ✅ Check relevant documentation
-2. ✅ Verify services running (docker-compose ps)
-3. ✅ Check .env files configured
-4. ✅ Review error logs
-5. ✅ Try troubleshooting section
-
----
-
-## 📈 Next Steps
-
-### Immediate (Week 1)
-- [ ] Verify all endpoints working
-- [ ] Test complete login flow
-- [ ] Create first partner via API
-- [ ] Test data persistence
-
-### Short Term (Week 2-3)
-- [ ] Add form validation
-- [ ] Implement error handling
-- [ ] Create admin panel
-- [ ] Add email notifications
-
-### Medium Term (Week 4-5)
-- [ ] Mobile optimization
-- [ ] Performance tuning
-- [ ] Accessibility audit
-- [ ] Security review
-
-### Long Term (Week 6+)
-- [ ] Advanced search
-- [ ] Analytics dashboard
-- [ ] Data export
-- [ ] Production deployment
-
----
-
-## ✅ Completed Tasks
-- [x] UI spacing improvements
-- [x] Database schema created
-- [x] API endpoints implemented
-- [x] Authentication system setup
-- [x] Docker Compose configured
-- [x] Comprehensive documentation
-
----
-
-## 🎓 Learning Resources
-
-- **Prisma**: https://www.prisma.io/docs
-- **Express**: https://expressjs.com
-- **Next.js**: https://nextjs.org/docs
-- **PostgreSQL**: https://www.postgresql.org/docs
-- **JWT**: https://jwt.io
-
----
-
-## 📝 Notes
-
-- All spacing follows design reference images
-- Database schema supports future expansion
-- API production-ready with error handling
-- JWT tokens expire after 7 days
-- All passwords hashed before storage
-
----
-
-**Built for Launchpad Philly Staff**
-
-*For detailed setup, see [GETTING_STARTED.md](./GETTING_STARTED.md) or [DATABASE_INTEGRATION_GUIDE.md](./DATABASE_INTEGRATION_GUIDE.md)*
+*Built for Launchpad Philly staff.*
