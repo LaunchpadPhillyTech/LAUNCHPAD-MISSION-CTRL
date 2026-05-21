@@ -40,5 +40,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }
