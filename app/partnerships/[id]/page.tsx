@@ -10,7 +10,7 @@ interface Props {
 
 export default async function PartnershipDetailsPage({ params }: Props) {
   const cookieStore = await cookies();
-  const token = cookieStore.get('authToken');
+  const token = cookieStore.get('token');
 
   if (!token) {
     redirect('/login');

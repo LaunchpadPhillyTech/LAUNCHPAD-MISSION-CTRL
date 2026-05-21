@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Plus, Search, Mail, Edit2, TrendingUp, Trash2, Building2 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { Button } from '@/app/components/Button';
@@ -21,10 +22,21 @@ interface Partner {
 }
 
 
-function PartnerCard({ partner }: { partner: Partner }) {
+function PartnerCard({ partner, onOpen }: { partner: Partner; onOpen: () => void }) {
   const primaryContact = partner.contacts[0];
   return (
-    <Link href={`/partners/${partner.id}`} className="group flex bg-card border border-border rounded-lg p-4 hover:shadow-md hover:border-primary/20 transition-all items-center gap-4 min-h-[96px] max-h-[120px]">
+    <div
+      role="link"
+      tabIndex={0}
+      onClick={onOpen}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onOpen();
+        }
+      }}
+      className="group flex bg-card border border-border rounded-lg p-4 hover:shadow-md hover:border-primary/20 transition-all items-center gap-4 min-h-[96px] max-h-[120px] cursor-pointer"
+    >
       {partner.logoUrl && (
         <img src={partner.logoUrl} alt={partner.organizationName} className="w-16 h-16 object-cover rounded-md flex-shrink-0" />
       )}
@@ -52,7 +64,7 @@ function PartnerCard({ partner }: { partner: Partner }) {
         <Link href={`/partners/${partner.id}/edit`} onClick={e => e.stopPropagation()} className="p-2 rounded bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors" title="Edit partner"><Edit2 size={16} /></Link>
         <Link href={`/email?partnerId=${partner.id}`} onClick={e => e.stopPropagation()} className="p-2 rounded bg-success/10 text-success hover:bg-success hover:text-white transition-colors" title="View interactions"><TrendingUp size={16} /></Link>
       </div>
-    </Link>
+    </div>
   );
 }
 
@@ -78,6 +90,7 @@ function EmptyState() {
 export default function PartnersPage() {
   const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchOrganizations() {
@@ -129,7 +142,7 @@ export default function PartnersPage() {
         ) : partners.length > 0 ? (
           <div className="flex flex-col gap-3">
             {partners.map((p) => (
-              <PartnerCard key={p.id} partner={p} />
+              <PartnerCard key={p.id} partner={p} onOpen={() => router.push(`/partners/${p.id}`)} />
             ))}
           </div>
         ) : (

@@ -22,4 +22,16 @@ export const api = {
     if (!res.ok) throw new Error('Failed to generate email');
     return res.json();
   },
+
+  async getInteractions() {
+    const res = await fetch(`${API_BASE}/api/interactions`);
+    if (!res.ok) throw new Error('Failed to fetch interactions');
+    return res.json();
+  },
+
+  async getStaff() {
+    const res = await fetch(`${API_BASE}/api/staff`);
+    if (!res.ok) throw new Error('Failed to fetch staff');
+    return res.json();
+  },
 };

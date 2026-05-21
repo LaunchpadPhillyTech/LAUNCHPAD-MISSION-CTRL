@@ -2,14 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Users, Mail, Settings, Shield, LogOut, FileText } from 'lucide-react';
+import { LayoutDashboard, Users, Mail, Settings, LogOut, FileText } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useAuth } from '@/app/context/AuthContext';
 
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/partnerships', label: 'Partnerships', icon: Shield },
+  { href: '/partners', label: 'Partners', icon: Users },
   { href: '/search', label: 'Search', icon: Mail },
   { href: '/email', label: 'Email', icon: Mail },
   { href: '/activity-log', label: 'Activity Log', icon: FileText },

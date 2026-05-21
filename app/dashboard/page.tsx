@@ -28,6 +28,7 @@ export default function Dashboard() {
   const router = useRouter();
   const [stats, setStats] = useState<DashboardData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -35,12 +36,40 @@ export default function Dashboard() {
     }
   }, [user, isLoading, router]);
 
+  useEffect(() => {
+    async function fetchDashboardData() {
+      setDashboardLoading(true);
+      setError(null);
+      try {
+        const res = await fetch('/api/dashboard');
+        if (!res.ok) {
+          throw new Error('Failed to load dashboard data');
+        }
+        const data = await res.json();
+        setStats(data);
+      } catch (e) {
+        console.error(e);
+        setError('Failed to load dashboard metrics.');
+      } finally {
+        setDashboardLoading(false);
+      }
+    }
+
+    if (user) {
+      fetchDashboardData();
+    }
+  }, [user]);
+
   if (isLoading) {
     return <div>Loading...</div>; // Or a spinner component
   }
 
   if (!user) {
     return null; // Or a redirect component
+  }
+
+  if (dashboardLoading) {
+    return <div className="max-w-7xl mx-auto w-full p-8 text-muted-foreground">Loading dashboard metrics...</div>;
   }
   
   const quickActions = [

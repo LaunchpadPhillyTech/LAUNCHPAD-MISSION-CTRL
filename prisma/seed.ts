@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function main() {
   // Create test user (test@launchpad.com / password123)
   const passwordHash = await bcrypt.hash('password123', 10);
-  const testUser = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email: 'test@launchpad.com' },
     update: {},
     create: {
@@ -18,6 +18,50 @@ async function main() {
       accessLevel: 'admin',
     },
   });
+
+  const seededStaff = [
+    {
+      email: 'aisha.cooper@launchpad.com',
+      fullName: 'Aisha Cooper',
+      role: 'PARTNERSHIP_MANAGER' as const,
+      title: 'Partnership Manager',
+      accessLevel: 'manager',
+    },
+    {
+      email: 'marcus.lee@launchpad.com',
+      fullName: 'Marcus Lee',
+      role: 'PROGRAM_COORDINATOR' as const,
+      title: 'Program Coordinator',
+      accessLevel: 'coordinator',
+    },
+    {
+      email: 'nina.patel@launchpad.com',
+      fullName: 'Nina Patel',
+      role: 'STAFF_USER' as const,
+      title: 'Outreach Specialist',
+      accessLevel: 'staff',
+    },
+  ];
+
+  for (const staff of seededStaff) {
+    await prisma.user.upsert({
+      where: { email: staff.email },
+      update: {
+        fullName: staff.fullName,
+        role: staff.role,
+        title: staff.title,
+        accessLevel: staff.accessLevel,
+      },
+      create: {
+        email: staff.email,
+        passwordHash,
+        fullName: staff.fullName,
+        role: staff.role,
+        title: staff.title,
+        accessLevel: staff.accessLevel,
+      },
+    });
+  }
 
 
   // Create 10 realistic tech organizations with upsert by unique name
@@ -122,7 +166,124 @@ async function main() {
     });
   }
 
-  console.log('Seed data created successfully.');
+  const defaultUser = await prisma.user.findUnique({
+    where: { email: 'test@launchpad.com' },
+    select: { id: true },
+  });
+
+  if (!defaultUser) {
+    throw new Error('Default user not found after seed upsert');
+  }
+
+  let demoPartner = await prisma.partner.findFirst({
+    where: {
+      organizationName: 'Launchpad Technologies',
+      createdById: defaultUser.id,
+    },
+    select: { id: true },
+  });
+
+  if (!demoPartner) {
+    demoPartner = await prisma.partner.create({
+      data: {
+        organizationName: 'Launchpad Technologies',
+        websiteUrl: 'https://launchpad.com',
+        schoolType: 'University',
+        partnerStatus: 'Active',
+        createdById: defaultUser.id,
+        tags: ['featured', 'core-partner'],
+      },
+      select: { id: true },
+    });
+  }
+
+  const seededStudents = [
+    {
+      fullName: 'Jordan Smith',
+      email: 'jordan.smith@example.com',
+      status: 'ACTIVE_MEMBER' as const,
+      cohort: 'Spring 2026',
+      earlyReleaseEligible: true,
+    },
+    {
+      fullName: 'Maya Johnson',
+      email: 'maya.johnson@example.com',
+      status: 'APPLICANT' as const,
+      cohort: 'Spring 2026',
+      earlyReleaseEligible: false,
+    },
+    {
+      fullName: 'Ethan Brooks',
+      email: 'ethan.brooks@example.com',
+      status: 'ACTIVE_MEMBER' as const,
+      cohort: 'Winter 2026',
+      earlyReleaseEligible: true,
+    },
+  ];
+
+  for (const student of seededStudents) {
+    const existing = await prisma.student.findFirst({
+      where: {
+        fullName: student.fullName,
+        partnerId: demoPartner.id,
+      },
+      select: { id: true },
+    });
+
+    if (existing) {
+      await prisma.student.update({
+        where: { id: existing.id },
+        data: {
+          email: student.email,
+          status: student.status,
+          cohort: student.cohort,
+          earlyReleaseEligible: student.earlyReleaseEligible,
+        },
+      });
+    } else {
+      await prisma.student.create({
+        data: {
+          fullName: student.fullName,
+          email: student.email,
+          partnerId: demoPartner.id,
+          status: student.status,
+          cohort: student.cohort,
+          earlyReleaseEligible: student.earlyReleaseEligible,
+          addedById: defaultUser.id,
+        },
+      });
+    }
+  }
+
+  const emailEvents = [
+    { to: 'principal@launchpad.com', subject: 'Partnership Kickoff Follow-up' },
+    { to: 'career@launchpad.com', subject: 'Spring Cohort Status Check' },
+    { to: 'ops@launchpad.com', subject: 'Interview Day Coordination' },
+  ];
+
+  for (const event of emailEvents) {
+    const existingEmail = await prisma.emailLog.findFirst({
+      where: {
+        userId: defaultUser.id,
+        to: event.to,
+        subject: event.subject,
+      },
+      select: { id: true },
+    });
+
+    if (!existingEmail) {
+      await prisma.emailLog.create({
+        data: {
+          userId: defaultUser.id,
+          to: event.to,
+          subject: event.subject,
+          sentAt: new Date(),
+        },
+      });
+    }
+  }
+
+  console.log('Seed data created successfully (users + organizations + dashboard metrics).');
 }
 
 main()

@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 
 export default async function PartnershipsPage() {
   const cookieStore = await cookies();
-  const token = cookieStore.get('authToken');
+  const token = cookieStore.get('token');
 
   if (!token) {
     redirect('/login');
@@ -47,7 +47,7 @@ export default async function PartnershipsPage() {
                 <div className="org-industry">{org.industry}</div>
                 <div className="org-description">{org.description}</div>
               </div>
-              <Link href={`/organizations/${org.id}`} className="view-details-btn">
+              <Link href={`/partnerships/${org.id}`} className="view-details-btn">
                 View Details
               </Link>
             </div>

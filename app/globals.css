@@ -231,6 +231,28 @@ input {
     --card: #ffffff;
     --card-foreground: #0f172a;
 
+    /* RGB channels for Tailwind semantic tokens */
+    --background-rgb: 255 255 255;
+    --foreground-rgb: 15 23 42;
+    --border-rgb: 226 232 240;
+    --input-rgb: 255 255 255;
+    --primary-rgb: 37 99 235;
+    --primary-foreground-rgb: 255 255 255;
+    --secondary-rgb: 241 245 249;
+    --secondary-foreground-rgb: 51 65 85;
+    --muted-rgb: 248 250 252;
+    --muted-foreground-rgb: 100 116 139;
+    --card-rgb: 255 255 255;
+    --card-foreground-rgb: 15 23 42;
+    --accent-rgb: 245 158 11;
+    --accent-foreground-rgb: 255 255 255;
+    --destructive-rgb: 239 68 68;
+    --destructive-foreground-rgb: 255 255 255;
+    --success-rgb: 16 185 129;
+    --success-foreground-rgb: 255 255 255;
+    --warning-rgb: 245 158 11;
+    --warning-foreground-rgb: 15 23 42;
+
     /* Sidebar specific (light theme) */
     --sidebar: #f8fafc;
     --sidebar-foreground: #334155;
@@ -332,6 +354,28 @@ input {
   --card: #1e293b;
   --card-foreground: #f8fafc;
 
+  /* RGB channels for Tailwind semantic tokens */
+  --background-rgb: 15 23 42;
+  --foreground-rgb: 248 250 252;
+  --border-rgb: 51 65 85;
+  --input-rgb: 30 41 59;
+  --primary-rgb: 59 130 246;
+  --primary-foreground-rgb: 255 255 255;
+  --secondary-rgb: 30 41 59;
+  --secondary-foreground-rgb: 203 213 225;
+  --muted-rgb: 30 41 59;
+  --muted-foreground-rgb: 148 163 184;
+  --card-rgb: 30 41 59;
+  --card-foreground-rgb: 248 250 252;
+  --accent-rgb: 245 158 11;
+  --accent-foreground-rgb: 255 255 255;
+  --destructive-rgb: 239 68 68;
+  --destructive-foreground-rgb: 255 255 255;
+  --success-rgb: 16 185 129;
+  --success-foreground-rgb: 255 255 255;
+  --warning-rgb: 245 158 11;
+  --warning-foreground-rgb: 15 23 42;
+
   /* Sidebar specific (dark theme) */
   --sidebar: #0f172a;
   --sidebar-foreground: #cbd5e1;
@@ -345,33 +389,6 @@ input {
   --active-bg: #334155;
   --focus-ring: #3b82f6;
   --focus-ring-opacity: 0.1;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-secondary: var(--secondary);
-  --color-card: var(--card);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-success: var(--success);
-  --color-accent: var(--accent);
-  --color-destructive: var(--destructive);
-  --color-warning: var(--warning);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-
-  --font-sans: var(--font-family-body);
-
-  --radius-sm: var(--radius-sm);
-  --radius-md: var(--radius-md);
-  --radius-lg: var(--radius-lg);
-  --radius-xl: var(--radius-xl);
 }
 
 /* ═════════════════════════════════════════════════════════════
